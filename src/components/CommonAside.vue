@@ -23,6 +23,7 @@
       </el-menu-item>
       <!-- 有子项目的菜单 -->
       <el-submenu
+
         v-for="item in hasChildren"
         :index="item.path + ''"
         :key="item.name"
@@ -36,7 +37,7 @@
           :key="subItem.path"
           :index="subItem.path"
         >
-          <el-menu-item :index="subIndex.path">{{
+          <el-menu-item @click="clickMenu(subItem)" :index="subIndex.path">{{
             subItem.label
           }}</el-menu-item>
         </el-menu-item-group>
@@ -46,12 +47,10 @@
 </template>
 
 <script>
-import {
-    mapState,mapMutations} from "vuex"
+import { mapState, mapMutations } from "vuex";
 export default {
   data() {
     return {
-
       menu: [
         {
           path: "/",
@@ -105,13 +104,12 @@ export default {
       console.log(key, keyPath);
     },
     // 获取路由名字
-    clickMenu(item){
+    clickMenu(item) {
       this.$router.push({
-        name:item.name
-      })
+        name: item.name,
+      });
+      this.$store.commit('selectMenu',item)
     },
-
-
   },
   //   计算属性  多个值改变会影响一个值
   computed: {
@@ -122,10 +120,10 @@ export default {
     hasChildren() {
       return this.menu.filter((item) => item.children);
     },
-    isCollapse(){
+    isCollapse() {
       // 从 vuex的state中拿到tab模块的isCollapse值
-      return this.$store.state.tab.isCollapse
-    }
+      return this.$store.state.tab.isCollapse;
+    },
   },
 };
 </script>
