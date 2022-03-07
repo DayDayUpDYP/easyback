@@ -35,6 +35,7 @@ const routes = [
         name:'mall',
         component:Mall
       },
+      
       {
         path:'/page1',
         name:'page1',

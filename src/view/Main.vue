@@ -6,6 +6,7 @@
         <el-header>
           <CommonHeader></CommonHeader>
         </el-header>
+        <CommonTag></CommonTag>
         <el-main>
           <!-- 这里是主面板，当点击不同侧边栏的时候这里根据路由规则进行改变 -->
           <router-view></router-view>
@@ -18,6 +19,7 @@
 <script>
 import CommonAside from "../components/CommonAside.vue";
 import CommonHeader from '../components/CommonHeader.vue'
+import CommonTag from '@/components/CommonTag'
 export default {
   name: "Home",
   data() {
@@ -25,7 +27,8 @@ export default {
   },
   components: {
     CommonAside,
-    CommonHeader
+    CommonHeader,
+    CommonTag
   },
 };
 </script>

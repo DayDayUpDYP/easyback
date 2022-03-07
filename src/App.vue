@@ -2,7 +2,7 @@
   <div id="app">
 
     <router-view></router-view>
-  <span> 每日一push</span>
+
   </div>
 </template>
 
