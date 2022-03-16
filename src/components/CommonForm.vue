@@ -1,12 +1,14 @@
 <template>
   <!-- 封装 Form组件 -->
   <div class="Form">
-    <el-form ref="form" :model="form" label-width="1000px" :inline="inline">
+    <!-- model是绑定表单数据的 这里绑定的是propos中的form 父组件传值传入props -->
+    <el-form ref="form" :model="form" label-width="100px" :inline="inline">
       <el-form-item
         v-for="item in formLabel"
         :key="item.label"
         :label="item.label"
       >
+      <!-- 下面的input框或者switch框 是会根据 formLabel的返回值确定的 -->
         <el-input
           v-if="item.type === 'input'"
           v-model="form[item.model]"

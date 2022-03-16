@@ -1,136 +1,140 @@
-// mock数据模拟
-import  Mock  from "mockjs";
+import Mock from 'mockjs'
 
-// 图表数据   首页的所有数据
+// get请求从config.url获取参数，post从config.body中获取参数
+function param2Obj (url) {
+  const search = url.split('?')[1]
+  if (!search) {
+    return {}
+  }
+  return JSON.parse(
+    '{"' +
+    decodeURIComponent(search)
+      .replace(/"/g, '\\"')
+      .replace(/&/g, '","')
+      .replace(/=/g, '":"') +
+    '"}'
+  )
+}
+
 let List = []
+const count = 200
+
+for (let i = 0; i < count; i++) {
+  List.push(
+    Mock.mock({
+      id: Mock.Random.guid(),
+      name: Mock.Random.cname(),
+      addr: Mock.mock('@county(true)'),
+      'age|18-60': 1,
+      birth: Mock.Random.date(),
+      sex: Mock.Random.integer(0, 1)
+    })
+  )
+}
+
 export default {
-  getStatisticalData: () => {
-    //Mock.Random.float 产生随机数100到8000之间 保留小数 最小0位 最大0位
-    for (let i = 0; i < 7; i++) {
-      List.push(
-        Mock.mock({
-          苹果: Mock.Random.float(100, 8000, 0, 0),
-          vivo: Mock.Random.float(100, 8000, 0, 0),
-          oppo: Mock.Random.float(100, 8000, 0, 0),
-          魅族: Mock.Random.float(100, 8000, 0, 0),
-          三星: Mock.Random.float(100, 8000, 0, 0),
-          小米: Mock.Random.float(100, 8000, 0, 0)
-        })
-      )
+  /**
+   * 获取列表
+   * 要带参数 name, page, limt; name可以不填, page,limit有默认值。
+   * @param name, page, limit
+   * @return {{code: number, count: number, data: *[]}}
+   */
+  getUserList: config => {
+    const { name, page = 1, limit = 20 } = param2Obj(config.url)
+    console.log('name:' + name, 'page:' + page, '分页大小limit:' + limit)
+    const mockList = List.filter(user => {
+      if (name && user.name.indexOf(name) === -1 && user.addr.indexOf(name) === -1) return false
+      return true
+    })
+    const pageList = mockList.filter((item, index) => index < limit * page && index >= limit * (page - 1))
+    return {
+      code: 20000,
+      count: mockList.length,
+      list: pageList
     }
+  },
+  /**
+   * 增加用户
+   * @param name, addr, age, birth, sex
+   * @return {{code: number, data: {message: string}}}
+   */
+  createUser: config => {
+    const { name, addr, age, birth, sex } = JSON.parse(config.body)
+    console.log(JSON.parse(config.body))
+    List.unshift({
+      id: Mock.Random.guid(),
+      name: name,
+      addr: addr,
+      age: age,
+      birth: birth,
+      sex: sex
+    })
     return {
       code: 20000,
       data: {
-        // 饼图
-        videoData: [
-          {
-            name: '小米',
-            value: 2999
-          },
-          {
-            name: '苹果',
-            value: 5999
-          },
-          {
-            name: 'vivo',
-            value: 1500
-          },
-          {
-            name: 'oppo',
-            value: 1999
-          },
-          {
-            name: '魅族',
-            value: 2200
-          },
-          {
-            name: '三星',
-            value: 4500
-          }
-        ],
-        // 柱状图
-        userData: [
-          {
-            date: '周一',
-            new: 5,
-            active: 200
-          },
-          {
-            date: '周二',
-            new: 10,
-            active: 500
-          },
-          {
-            date: '周三',
-            new: 12,
-            active: 550
-          },
-          {
-            date: '周四',
-            new: 60,
-            active: 800
-          },
-          {
-            date: '周五',
-            new: 65,
-            active: 550
-          },
-          {
-            date: '周六',
-            new: 53,
-            active: 770
-          },
-          {
-            date: '周日',
-            new: 33,
-            active: 170
-          }
-        ],
-        // 折线图
-        orderData: {
-          date: ['20191001', '20191002', '20191003', '20191004', '20191005', '20191006', '20191007'],
-          data: List
-        },
-        tableData: [
-          {
-            name: 'oppo',
-            todayBuy: 500,
-            monthBuy: 3500,
-            totalBuy: 22000
-          },
-          {
-            name: 'vivo',
-            todayBuy: 300,
-            monthBuy: 2200,
-            totalBuy: 24000
-          },
-          {
-            name: '苹果',
-            todayBuy: 800,
-            monthBuy: 4500,
-            totalBuy: 65000
-          },
-          {
-            name: '小米',
-            todayBuy: 1200,
-            monthBuy: 6500,
-            totalBuy: 45000
-          },
-          {
-            name: '三星',
-            todayBuy: 300,
-            monthBuy: 2000,
-            totalBuy: 34000
-          },
-          {
-            name: '魅族',
-            todayBuy: 350,
-            monthBuy: 3000,
-            totalBuy: 22000
-          }
-        ]
+        message: '添加成功'
+      }
+    }
+  },
+  /**
+   * 删除用户
+   * @param id
+   * @return {*}
+   */
+  deleteUser: config => {
+    const { id } = param2Obj(config.url)
+    if (!id) {
+      return {
+        code: -999,
+        message: '参数不正确'
+      }
+    } else {
+      List = List.filter(u => u.id !== id)
+      return {
+        code: 20000,
+        message: '删除成功'
+      }
+    }
+  },
+  /**
+   * 批量删除
+   * @param config
+   * @return {{code: number, data: {message: string}}}
+   */
+  batchremove: config => {
+    let { ids } = param2Obj(config.url)
+    ids = ids.split(',')
+    List = List.filter(u => !ids.includes(u.id))
+    return {
+      code: 20000,
+      data: {
+        message: '批量删除成功'
+      }
+    }
+  },
+  /**
+   * 修改用户
+   * @param id, name, addr, age, birth, sex
+   * @return {{code: number, data: {message: string}}}
+   */
+  updateUser: config => {
+    const { id, name, addr, age, birth, sex } = JSON.parse(config.body)
+    const sex_num = parseInt(sex)
+    List.some(u => {
+      if (u.id === id) {
+        u.name = name
+        u.addr = addr
+        u.age = age
+        u.birth = birth
+        u.sex = sex_num
+        return true
+      }
+    })
+    return {
+      code: 20000,
+      data: {
+        message: '编辑成功'
       }
     }
   }
 }
-

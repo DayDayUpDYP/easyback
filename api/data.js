@@ -15,3 +15,12 @@ export const getData = ()=>{
     url:'/home/getData'
   })
 }
+
+// 拦截器
+export const getUser = (params) =>{
+  return axios.request({
+    url:'/user/getUser',
+    method:'get',
+    params
+  })
+}
