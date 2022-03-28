@@ -44,7 +44,9 @@
 </template>
 
 <script>
-
+import Mock from 'mockjs'
+// 引入接口路径
+import {getMenu} from '../../../api/data'
 export default {
   name: "Login",
   data() {
@@ -64,6 +66,20 @@ export default {
   methods:{
     //   登录选项
       login(){
+        //   请求登录接口
+        getMenu(this.form).then(res=>{
+            if(res.code === 20000){
+                // 需要拿到token 
+                //需要对不同账号配置不同权限
+                // 实现跳转
+            }else{
+                this.$message.warning(res.data.message)
+            }
+        })
+        //   登录的时候需要设置token
+       const token = Mock.random.guid() //mock生成一个 随机数
+       this.store.commit('setToken',token)
+       this.$router.push({name:'home'})
 
       }
   },

@@ -21,6 +21,18 @@ Vue.use(ElementUI);
 Vue.config.productionTip = false
 Vue.prototype.$store = store
 Vue.prototype.$http = http
+
+
+// 导航守卫
+router.beforeEach((to,from,next)=>{
+  store.commit('getToken')
+  const token = store.state.user.token
+  if(!token&&to.name !='login'){
+    next({name:'login'})
+  }else{
+    next()
+  }
+})
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
