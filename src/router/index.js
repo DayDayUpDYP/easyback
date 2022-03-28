@@ -6,6 +6,7 @@ import User from '../view/User/index.vue'
 import Mall from '../view/Mall/index.vue'
 import Pageone from '../view/Other/Page1.vue'
 import Pagetwo from '../view/Other/Page2.vue'
+import Login from '../view/Login/login.vue'
 
 Vue.use(Router)
 
@@ -46,8 +47,15 @@ const routes = [
         name:'page2',
         component:Pagetwo
       }
-    ]
+    ],
+    
   },
+  {
+    path:'/login',
+    name:'login',
+    component:Login
+  },
+  
 ]
 
 const router = new Router({
