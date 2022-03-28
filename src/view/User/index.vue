@@ -26,7 +26,7 @@
         ref="form"
       >
         <!-- 这里预留了一个slot区域 可以插入 动态的组件 -->
-        <el-button type="primary" @click="getList">搜索</el-button>
+        <el-button type="primary" @click="getList(searchForm.keyword)">搜索</el-button>
       </CommonForm>
     </div>
     <!-- table方面的代码 -->
@@ -51,6 +51,7 @@ export default {
   components: {
     CommonForm,
     CommonTable,
+    
   },
   data() {
     return {
@@ -112,6 +113,7 @@ export default {
       searchForm: {
         keyword: "",
       },
+
       // 下面的值是table需要的
       tableData: [],
       // label标签的值
@@ -139,6 +141,7 @@ export default {
           width: 320,
         },
       ],
+      // 分页组件
       config:{
         page:1,
         total:30
@@ -181,6 +184,7 @@ export default {
       this.operateType = 'edit'
       this.isShow = true
       this.operateForm = row
+      console.log('editUserrow==>',row)
     },
     delUser(row){
       // 点击删除用户时，将弹出此弹出框
@@ -190,7 +194,7 @@ export default {
         type:'warning'
       }).then(() =>{
         const id = row.id
-        this.$http.get("user/del",{
+        this.$http.post("user/del",{
           params:{id}
         }).then(() =>{
           this.$message({
