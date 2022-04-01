@@ -1,3 +1,5 @@
+import Cookie from "js-cookie";
+
 const state = {
   isCollapse: false,
   tabsList: [
@@ -8,7 +10,9 @@ const state = {
       icon: "home"
     }
   ] /* 用于存储面包屑的信息 更改选中颜色 */,
-  currentMenu: null // 当前高亮显示的面包屑
+  currentMenu: null, // 当前高亮显示的面包屑
+  // 用于动态路由的展示
+  menu:[]
 };
 const mutations = {
   collapseMenu(state) {
@@ -30,6 +34,47 @@ const mutations = {
   closeTag(sate, val) {
     const result = sate.tabsList.findIndex(item => item.name === val.name);
     state.tabsList.splice(result, 1);
+  },
+  setMenu(state,val){
+    // 将menu数据获取并缓存到cookie
+    console.log('执行setmenut')
+    state.menu = val;
+    console.log('va;==>',val)
+    Cookie.set('menu',JSON.stringify(val))
+  },
+  clearMenu(state){
+    state.menu = []
+  },
+  // 将menu添加
+  addMenu(state,router){
+
+    if(!Cookie.get('menu')){
+      return
+    }
+    // 这句话出错了 
+    const menu = JSON.parse(Cookie.get('menu'))
+    
+    state.menu = menu;
+    const menuArray = []
+    menu.forEach(item=>{
+      // 表示如果有二级菜单
+      if(item.children){
+        // 给children每个添加component 赋值
+        item.children = item.children.map(item=>{
+          item.component = ()=> import(`../view/${item.url}`)
+          return item
+        })
+        menuArray.push(...item.children)
+      }else{
+        item.component = () =>import(`../view/${item.url}`)
+        menuArray.push(item)
+      }
+      // 动态添加路由
+      menuArray.forEach(element => {
+        // 给main动态添加路由
+       router.addRoute('Main',element)
+      });
+    });
   }
 };
 export default {

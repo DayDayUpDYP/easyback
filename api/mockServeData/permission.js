@@ -16,7 +16,7 @@ export default {
               name: 'home',
               label: '首页',
               icon: 's-home',
-              url: 'Home/Home'
+              url: 'Home'
             },
             {
               path: '/mall',
@@ -67,7 +67,7 @@ export default {
               name: 'home',
               label: '首页',
               icon: 's-home',
-              url: 'Home/Home'
+              url: 'Home'
             },
             {
               path: '/video',

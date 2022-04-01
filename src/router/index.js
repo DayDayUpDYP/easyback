@@ -20,33 +20,35 @@ const routes = [
     path: "/",
     name:'Main',
     component: Main,
+    component:() => import('../view/Main.vue'),
+    redirect:'/home',
     children:[
-      {
-        path:'/home',
-        name:'home',
-        component:Home
-      },
-      {
-        path:'/user',
-        name:'user',
-        component:User
-      },
-      {
-        path:'/mall',
-        name:'mall',
-        component:Mall
-      },
+      // {
+      //   path:'/home',
+      //   name:'home',
+      //   component:Home
+      // },
+      // {
+      //   path:'/user',
+      //   name:'user',
+      //   component:User
+      // },
+      // {
+      //   path:'/mall',
+      //   name:'mall',
+      //   component:Mall
+      // },
       
-      {
-        path:'/page1',
-        name:'page1',
-        component:Pageone
-      },
-      {
-        path:'/page2',
-        name:'page2',
-        component:Pagetwo
-      }
+      // {
+      //   path:'/page1',
+      //   name:'page1',
+      //   component:Pageone
+      // },
+      // {
+      //   path:'/page2',
+      //   name:'page2',
+      //   component:Pagetwo
+      // }
     ],
     
   },

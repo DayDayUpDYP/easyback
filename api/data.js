@@ -16,7 +16,7 @@ export const getData = ()=>{
   })
 }
 
-// 前端 请求写的地方
+// 前端 请求写的地方 
 export const getUser = (params) =>{
   return axios.request({
     url:'/user/getUser',
